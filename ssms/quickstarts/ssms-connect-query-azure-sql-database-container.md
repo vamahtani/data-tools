@@ -41,7 +41,7 @@ This quickstart demonstrates the following steps:
 
 ## What is an Azure SQL Database container?
 
-A container packages the Azure SQL Database engine so that a container runtime can run it on your computer. Your application connects to a local address such as `localhost,1433`, rather than an Azure SQL logical server.
+A container packages the Azure SQL Database engine so that a container runtime can run it on your computer. Your application connects to a local address such as `127.0.0.1,1433`, rather than an Azure SQL logical server.
 
 The container runs the Azure SQL Database engine, not the SQL Server container image. It supports Azure SQL Database T-SQL and the Tabular Data Stream (TDS) protocol used by SQL drivers. `SERVERPROPERTY('EngineEdition')` returns `5`, identifying the Azure SQL Database engine. Native vectors, vector search, and JSON let you explore AI-ready data scenarios locally.
 
@@ -86,7 +86,9 @@ Use the SSMS wizard to create and start the container. The wizard provisions an 
 
    :::image type="content" source="media/ssms-connect-query-azure-sql-database-container/runtime-readiness.png" alt-text="Screenshot of the Runtime readiness page reporting that the container runtime is ready to create the container.":::
 
-1. On **Container settings**, configure the database login and enter your password. The password must contain at least eight characters and include characters from at least three of these categories: uppercase letters, lowercase letters, digits, and symbols. Store it securely, not in source control or AI prompts.
+1. On **Container settings**, enter end confirm a password for the built-in `sa` login. The password must contain at least eight characters and include characters from at least three of these categories: uppercase letters, lowercase letters, digits, and symbols.
+
+   Select Remember password if you want SSMS to save the password in connection history. Otherwise, keep the password securely available for future connections. Don't store it in source control or include it in AI prompts.
 
    Review **View license terms**, then select the license acceptance checkbox. Expand **Advanced options** if you need to review additional configuration. Select **Create**.
 
@@ -113,10 +115,10 @@ The wizard connects Object Explorer automatically. Use these steps if you need t
    | Setting | Value |
    | --- | --- |
    | Server type, if shown | **Database Engine** |
-   | Server name | `localhost,1433`, or the host port you selected |
+   | Server name | `127.0.0.1,<host-port>`. Replace `<host-port>` with the port shown in Connection String Details. |
    | Authentication | **SQL Server Authentication** |
-   | Login | The SQL login configured during provisioning, such as `sa` |
-   | Password | The local database password you chose in the wizard |
+   | Login | `sa` |
+   | Password | The `sa` password you entered in the wizard |
    | Database name / Connect to database | `master` |
    | Encryption | **Mandatory**, or enable **Encrypt connection** in older dialogs |
    | Trust server certificate | Selected |
@@ -262,7 +264,7 @@ SQL Server `.bak` files aren't BACPAC files. `BACKUP DATABASE` and `RESTORE DATA
 Use the local endpoint, the wizard's selected host port, your database name, and your credentials with an Azure SQL-compatible driver or object-relational mapper (ORM). For example, this ADO.NET-style connection string targets `TutorialDB`:
 
 ```text
-Server=localhost,<host-port>;Database=TutorialDB;User ID=<sql-login>;Password=<password>;Encrypt=True;TrustServerCertificate=True;
+Server=127.0.0.1,<host-port>;Database=TutorialDB;User ID=<sql-login>;Password=<password>;Encrypt=True;TrustServerCertificate=True;
 ```
 
 Replace the placeholders before connecting. `TrustServerCertificate=True` is for the local container's self-signed certificate only. Use certificate validation and an appropriate authentication method for Azure SQL Database in Azure.
